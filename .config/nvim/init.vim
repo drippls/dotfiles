@@ -1,7 +1,7 @@
 " Config file for VIM, edit with vim ~/.vimrc  |  :e ~/.vimrc
 
 " Written on 18-6-2019 by Jude Lakkis
-" Last Edited on 13-09-2020 by Jude Lakkis
+" Last Edited on 15-09-2020 by Jude Lakkis
 " Use VIM instead of pure VI (this must be the first instruction)
 set nocompatible
  
