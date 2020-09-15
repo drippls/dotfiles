@@ -24,6 +24,9 @@ Plug 'tpope/vim-commentary'
 " Snippets & Autocompletion
 Plug 'msanders/snipmate.vim'
 Plug 'ervandew/supertab'
+
+" Terminal Commands
+Plug 'kassio/neoterm'
  
 " Language Specific Syntax Plugins
 Plug 'vim-python/python-syntax'
@@ -129,15 +132,29 @@ let g:SuperTabMappingForward = '<S-Tab>'
 " 					Running files in NVIM buffers
 " ----------------------------------------------------------------
 
-" Python 3 Files
-autocmd Filetype python nnoremap <buffer> <Right> :w<cr>:echo system('python3 "' . expand('%') . '"') <cr>
-" Rust Files /wo Cargo
-autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>:echo system('rustc "' . expand('%') . '"')<cr>:echo system('./"' . expand('%:r') . '"')<cr>
-" Rust Files /w Cargo
-" autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>:echo system('rustc "' . expand('%') . '"')<cr>:echo system('./"' . expand('%:r') . '"')<cr>
-" autocmd Filetype rust nnoremap <buffer> <Right> :w<CR>:vert ter cargo run<CR>
+" Python Files
+" Only Line that works perfectly right now
+autocmd Filetype python nnoremap <buffer> <Right> :w<cr>:echo system('python3 "' . expand('%') . '"')<cr>
+
 " Vimscript Files
 autocmd Filetype vim nnoremap <buffer> <Right> :w<cr>:so %<cr>
+
+" Rust Files
+" Without Cargo
+autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>:echo system('rustc "' . expand('%') . '"')<cr>:echo system('./"' . expand('%:r') . '"')<cr>
+
+" I just can't figure this out right now, it's been hours… I'm giving up for today and saving my progress
+" With Cargo
+autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>terminal cargo run <cr>
+" Rust Files /wo Cargo
+" Not sure why I can't get this to work…
+" autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>sp | term rustc "%" <cr>
+
+" Rust Files /w Cargo
+" autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>term cargo run<cr>
+" autocmd Filetype rust nmap <Right> :split %>% terminal cargo run <CR>
+" autocmd Filetype rust nmap <Right> :vs +terminal cargo run<CR>
+" autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>:echo system('cargo run "' . expand('%') . '"')<cr>
 
 " ----------------------------------------------------------------
 " 					  General Editor Settings
