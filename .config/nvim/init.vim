@@ -145,7 +145,7 @@ autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>:echo system('rustc "' . e
 
 " I just can't figure this out right now, it's been hours… I'm giving up for today and saving my progress
 " With Cargo
-autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>terminal cargo run <cr>
+autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>:vs +term<cr>A
 " Rust Files /wo Cargo
 " Not sure why I can't get this to work…
 " autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>sp | term rustc "%" <cr>
