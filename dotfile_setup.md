@@ -40,3 +40,14 @@ Usage is pretty much exactly like using git. All of these commands work exactly 
 	dotfiles commit -m "Add bashrc"
 	dotfiles push
 
+TODO
+### New Machine:
+
+	alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+	echo "alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'" >> $HOME/.zshrc
+	echo ".dotfiles" >> .gitignore
+	git clone --bare <git-repo-url> $HOME/.dotfiles
+	dotfiles checkout
+	dotfiles config --local status.showUntrackedFiles no
+
+https://www.atlassian.com/git/tutorials/dotfiles

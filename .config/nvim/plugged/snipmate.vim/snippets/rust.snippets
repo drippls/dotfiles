@@ -49,6 +49,8 @@ snippet d; "dbg! debugging macro statement"
 	dbg!(&${1});
 	${0}
 # Modules
+snippet imp
+	use ${1:lib}::${2:mod};
 snippet ec "extern crate"
 	extern crate ${1:sync};
 snippet ecl "extern crate log"
