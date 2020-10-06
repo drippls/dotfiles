@@ -132,7 +132,7 @@ snippet base
 snippet r
 	<br`Close()[1:]`>
 snippet div
-	<div id="${1:name}">
+	<div class="${1:name}">
 	    ${2}
 	</div>
 # Embed QT Movie
@@ -213,6 +213,12 @@ snippet layout
 snippet utf
 	<meta charset="UTF-8">
 	${1}
+snippet main
+	<main>
+		${1}
+	</main>
+snippet span
+	<span>${1}</span>
 # Flask Snippets
 snippet %ex
 	{% extends '${1:wrapper.html}' %}${2}
@@ -226,3 +232,5 @@ snippet %fill
 	{% block ${1:Name} %}{% endblock %}
 snippet %to
 	{{ url_for('${1:Page}') }}
+snippet flink
+	<a href="{{ url_for('${1:RouteName}') }}">${2:BtnName}</a>
