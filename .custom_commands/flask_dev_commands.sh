@@ -1,6 +1,7 @@
 #!/bin/bash
 
-function flaskprj() {
+function flp() {
+	echo "Building Virtual Enviroment";
 	virtualenv env;
 	source env/bin/activate;
 	pip3 install Flask;
@@ -17,6 +18,7 @@ function flaskprj() {
 	touch main.js;
 	cd ../../templates;
 	touch wrapper.html home.html;
-	cd ..;
-	tree;
+	cd ../..;
+	echo "Structure Created:"
+	tree -I env;
 }
