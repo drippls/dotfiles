@@ -1,44 +1,33 @@
-" Config file for VIM, edit with vim ~/.vimrc  |  :e ~/.vimrc
+" NeoVIM Config - 2021
 
-" Written on 18-6-2019 by Jude Lakkis
-" Last Edited on 15-09-2020 by Jude Lakkis
-" Use VIM instead of pure VI (this must be the first instruction)
-set nocompatible
- 
 " ----------------------------------------------------------------
 "              Plugins - Import/Calling - VimPlug
 " ----------------------------------------------------------------
 
 call plug#begin()
-" Universal Colourscheme
+" Universal Color Scheme
 Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
- 
+
 " Lightline Status Bar
 Plug 'itchyny/lightline.vim'
- 
-" General Syntax Plugins
+
+" Syntax Plugins
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/syntastic'
-Plug 'raimondi/delimitmate'
 Plug 'tpope/vim-commentary'
 
-" Snippets & Autocompletion
-Plug 'msanders/snipmate.vim'
-Plug 'ervandew/supertab'
-
-" Terminal Commands
-Plug 'kassio/neoterm'
- 
-" Language Specific Syntax Plugins
+" Language Specific Plugins
 Plug 'vim-python/python-syntax'
 Plug 'rust-lang/rust.vim'
-Plug 'mattn/webapi-vim'
-Plug 'plasticboy/vim-markdown'
 Plug 'mattn/emmet-vim'
- 
-" Prose/Notes Plugins
+Plug 'plasticboy/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'mattn/webapi-vim'
+
+" Prose and Plane Text
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
 call plug#end()
 
 
@@ -72,6 +61,39 @@ let g:lightline = {
         \ },
         \ }
 
+" CoC Settings
+" ---------------
+" Tab Completion
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" CoC Snippet Activation
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
+" Python Provider Solution
+if has('macunix')
+	let g:python3_host_prog = '/usr/local/bin/python3' " -- Set python 3 provider
+endif
+
 " Syntastic Settings
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -79,10 +101,10 @@ set statusline+=%*
  
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
- 
+
 " Extra Syntax Highlighting
 let python_highlight_all = 1
+let g:syntastic_check_on_wq = 0
 
 " Vim Commenting
 " Sending uncommon Unicode via 
@@ -105,7 +127,7 @@ augroup litecorrect
   autocmd FileType text call litecorrect#init()
   autocmd FileType markdown,mkd call litecorrect#init()
 augroup END
- 
+
 " Markdown Preview
 let g:mkdp_auto_start = 0
 let g:mkdp_auto_close = 1
@@ -113,7 +135,6 @@ let g:mkdp_refresh_slow = 1
 let g:mkdp_browser = 'firefox'
 " Double tap enter to kill any existing preview and load a new preview
 autocmd Filetype markdown nnoremap <silent> <CR><CR> <Esc>:MarkdownPreview<CR><Esc>
-" autocmd Filetype markdown nnoremap <silent> <CR><CR> <Esc>:MarkdownPreviewStop<CR>:MarkdownPreview<CR><Esc>
 
 " Rust.vim
 " Autoformat upon save
@@ -122,18 +143,16 @@ let g:rustfmt_autosave = 1
 let g:rust_clip_command = 'pbcopy'
 " Check this out later: https://github.com/rust-lang/rust.vim#running-a-test-under-cursor
 
-" SuperTab
-" Keeps <Tab> and allowes for <S-Tab> to autocomplete
-let g:SuperTabMappingTabLiteral = '<Tab>'
-let g:SuperTabMappingForward = '<S-Tab>'
+" Remapping Emmet Bindings
+" Expand globally
+let g:user_emmet_expandabbr_key = '<c-Shift-E>'
 
 
 " ----------------------------------------------------------------
 " 					Running files in NVIM buffers
 " ----------------------------------------------------------------
 
-" Python Files
-" Only Line that works perfectly right now
+" Run Python files in buffer
 autocmd Filetype python nnoremap <buffer> <Right> :w<cr>:echo system('python3 "' . expand('%') . '"')<cr>
 
 " Vimscript Files
@@ -142,27 +161,32 @@ autocmd Filetype vim nnoremap <buffer> <Right> :w<cr>:so %<cr>
 " Rust Files
 " Without Cargo
 autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>:echo system('rustc "' . expand('%') . '"')<cr>:echo system('./"' . expand('%:r') . '"')<cr>
-
-" I just can't figure this out right now, it's been hours… I'm giving up for today and saving my progress
 " With Cargo
 autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>:vs +term<cr>A
-" Rust Files /wo Cargo
-" Not sure why I can't get this to work…
-" autocmd Filetype rust nnoremap <buffer> <Right> :w<cr>sp | term rustc "%" <cr>
 
-" Rust Files /w Cargo
-" autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>term cargo run<cr>
-" autocmd Filetype rust nmap <Right> :split %>% terminal cargo run <CR>
-" autocmd Filetype rust nmap <Right> :vs +terminal cargo run<CR>
-" autocmd Filetype rust nnoremap <buffer> <S-Right> :w<cr>:echo system('cargo run "' . expand('%') . '"')<cr>
 
 " ----------------------------------------------------------------
 " 					  General Editor Settings
 " ----------------------------------------------------------------
 
-" Display Settings
-" ----------------
- 
+" NAVIGATION
+" --------------- 
+" Maps ijkl for movement
+map i <Up>
+map j <Left>
+map k <Down>
+" Swaps i & h
+nnoremap h i
+nnoremap H I
+" Split Movement
+nmap <C-i> <C-w><Up>
+nmap <C-k> <C-w><Down>
+nmap <C-j> <C-w><Left>
+nmap <C-l> <C-w><Right>
+
+
+" DISPLAY
+" --------------- 
 set encoding=utf-8      " Encoding used for displaying file
 set ruler           	" Show the cursor position all the time
 set number          	" Show line numbers down the left
@@ -171,26 +195,9 @@ set showmatch           " Highlight matching braces
 set noshowmode          " Don't show the mode VIM is currently in
 set scrolloff=15        " Adds lines at the end of the file to allow for scrolling
 
-" Navigation
-" ---------------------------------------------
 
-" Maps ijkl for movement
-map i <Up>
-map j <Left>
-map k <Down>
-" Swaps i & h
-noremap h i
-noremap H I
-
-" Split Movement
-nmap <C-i> <C-w><Up>
-nmap <C-k> <C-w><Down>
-nmap <C-j> <C-w><Left>
-nmap <C-l> <C-w><Right>
-
-" Editing
-" ---------------------------------------------
-
+" EDITING
+" --------------- 
 " Generics
 set nojoinspaces        " No extra '.' after joining lines
 set shiftwidth=4        " Set indentation width to 4 columns
@@ -202,43 +209,21 @@ set splitright          " Creates active Split Left, :vs
  
 " Enable Folding
 set foldmethod=indent   " Fold on indentation
-set foldlevel=99
+set foldlevel=99	" Fully fold
 
-" Regular Text Editing
-autocmd Filetype text nnoremap <buffer> <Right> ]s
-autocmd Filetype markdown  nnoremap <buffer> <Right> ]s
- 
+" Spell Check and Corrections
+autocmd Filetype text,markdown nnoremap <buffer> <Right> ]s
+autocmd Filetype text,markdown nnoremap <buffer> <S-Right> z=
 set complete+=kspell
- 
-" Searching
-" ---------------------------------------------
- 
-" Highlights search results
-set hlsearch
-" Does a case-insensitive search
-set ignorecase
-" Does an incremental search
-set incsearch
-" Makes capital searches case sensitive
-" While lowercase searches aren't
-set ignorecase
-set smartcase
+
+
+" SEARCHING
+" --------------- 
+set hlsearch		" Highlights search results
+set ignorecase		" Case-insensitive search
+set incsearch		" Incremental searching
+set smartcase		" Makes capital searchs case sensitive
+set ignorecase		" But not for lowercase searches
+
 " Double Press Esc to remove search highlight
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
- 
-" File Output
-" ---------------------------------------------
- 
-" Saves the file with utf-8
-set fileencoding=utf-8
-" Confirms :q command
-set confirm
-" Spell Check set to English
-set spelllang=en
-" Dictionary File
-set spellfile=$HOME/Dropbox/vim/spell/en.utf-8.add
-" Makes VIM read .md as markdown files
-au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
-" Turns on spell check for text and markdown files
-" au BufReadPost,BufNewFile *.txt,*.md set spell
-au BufNewFile,BufFilePre,BufRead *.html set filetype=html
